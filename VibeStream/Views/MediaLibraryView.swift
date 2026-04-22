@@ -8,16 +8,28 @@
 import SwiftUI
 
 struct MediaLibraryView: View {
+    
+    @StateObject var viewModel = MediaLibraryViewModel()
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        NavigationStack {
+            List(viewModel.items) { item in
+                Text(item.title)
+            }
+            .navigationTitle("VibeStream")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        // we will wire navigation next step
+                    } label: {
+                        Image(systemName: "plus")
+                    }
+                }
+            }
         }
-        .padding()
     }
 }
+
 
 #Preview {
     MediaLibraryView()
