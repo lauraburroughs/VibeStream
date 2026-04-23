@@ -9,6 +9,7 @@ import SwiftUI
 
 struct MediaDetailView: View {
     
+    @ObservedObject var viewModel: MediaLibraryViewModel
     let item: MediaItem
     
     var body: some View {
@@ -30,12 +31,24 @@ struct MediaDetailView: View {
         }
         .padding()
         .navigationTitle("Details")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            NavigationLink {
+                AddEditMediaView(
+                    viewModel: viewModel,
+                    existingItem: item
+                )
+            } label: {
+                Text("Edit")
+            }
+        }
     }
 }
 
 
 #Preview {
     MediaDetailView(
+        viewModel: MediaLibraryViewModel(),
         item: MediaItem(
             id: UUID(),
             title: "Example Movie",

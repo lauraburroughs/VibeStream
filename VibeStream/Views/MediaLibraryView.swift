@@ -29,8 +29,10 @@ struct MediaLibraryView: View {
                         ForEach(viewModel.items) { item in
                             
                             NavigationLink {
-                                MediaDetailView(item: item)
-                            } label: {
+                                MediaDetailView(
+                                    viewModel: viewModel,
+                                    item: item
+                                )                            } label: {
                                 VStack(alignment: .leading, spacing: 4) {
                                     
                                     Text(item.title)
