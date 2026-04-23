@@ -34,6 +34,10 @@ struct MediaLibraryView: View {
                                 Text(item.creator)
                                     .font(.subheadline)
                                     .foregroundStyle(.secondary)
+                                
+                                Text(item.category.rawValue.capitalized)
+                                    .font(.caption)
+                                    .foregroundStyle(.blue)
                             }
                         }
                         .onDelete(perform: viewModel.deleteItem)
