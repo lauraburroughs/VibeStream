@@ -27,17 +27,23 @@ struct MediaLibraryView: View {
                 } else {
                     List {
                         ForEach(viewModel.items) { item in
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text(item.title)
-                                    .font(.headline)
-                                
-                                Text(item.creator)
-                                    .font(.subheadline)
-                                    .foregroundStyle(.secondary)
-                                
-                                Text(item.category.rawValue.capitalized)
-                                    .font(.caption)
-                                    .foregroundStyle(.blue)
+                            
+                            NavigationLink {
+                                MediaDetailView(item: item)
+                            } label: {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    
+                                    Text(item.title)
+                                        .font(.headline)
+                                    
+                                    Text(item.creator)
+                                        .font(.subheadline)
+                                        .foregroundStyle(.secondary)
+                                    
+                                    Text(item.category.rawValue.capitalized)
+                                        .font(.caption)
+                                        .foregroundStyle(.blue)
+                                }
                             }
                         }
                         .onDelete(perform: viewModel.deleteItem)
@@ -58,7 +64,8 @@ struct MediaLibraryView: View {
         }
     }
 }
-
+ 
+    
 #Preview {
-    MediaLibraryView()
+        MediaLibraryView()
 }
