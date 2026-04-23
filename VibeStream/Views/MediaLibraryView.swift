@@ -11,6 +11,8 @@ struct MediaLibraryView: View {
     
     @StateObject var viewModel = MediaLibraryViewModel()
     
+    @State private var showAddView = false
+    
     var body: some View {
         NavigationStack {
             List(viewModel.items) { item in
@@ -19,13 +21,19 @@ struct MediaLibraryView: View {
             .navigationTitle("VibeStream")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        // we will wire navigation next step
-                    } label: {
+                    Button(action: {
+                        showAddView = true
+                    }) {
                         Image(systemName: "plus")
                     }
                 }
             }
+            
+            .sheet(isPresented: $showAddView) {
+                AddEditMediaView(viewModel: viewModel)
+            }
+            
+            
         }
     }
 }

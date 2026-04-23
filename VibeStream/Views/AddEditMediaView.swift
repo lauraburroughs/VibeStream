@@ -20,7 +20,16 @@ struct AddEditMediaView: View {
     @ObservedObject var viewModel: MediaLibraryViewModel
     
     var body: some View {
-        Text("Add Media View")
+        Form {
+            Section(header: Text("Basic Info")) {
+                
+                TextField("Title", text: $title)
+                TextField("Creator", text: $creator)
+            }
+        }
+        
+        
+        
     }
 }
     
