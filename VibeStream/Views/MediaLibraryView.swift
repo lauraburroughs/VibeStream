@@ -12,6 +12,15 @@ struct MediaLibraryView: View {
     @StateObject var viewModel = MediaLibraryViewModel()
     @State private var showAddView = false
     
+    
+    private func delete(_ item: MediaItem) {
+        if let index = viewModel.items.firstIndex(where: { $0.id == item.id }) {
+            viewModel.items.remove(at: index)
+        }
+    }
+    
+    
+    
     var body: some View {
         NavigationStack {
             
@@ -27,29 +36,26 @@ struct MediaLibraryView: View {
                 } else {
                     List {
                         ForEach(viewModel.items) { item in
-                            
-                            NavigationLink {
-                                MediaDetailView(
-                                    viewModel: viewModel,
-                                    item: item
-                                )                            } label: {
-                                VStack(alignment: .leading, spacing: 4) {
-                                    
-                                    Text(item.title)
-                                        .font(.headline)
-                                    
-                                    Text(item.creator)
-                                        .font(.subheadline)
-                                        .foregroundStyle(.secondary)
-                                    
-                                    Text(item.category.rawValue.capitalized)
-                                        .font(.caption)
-                                        .foregroundStyle(.blue)
+                            NavigationLink(
+                                destination: MediaDetailView(viewModel: viewModel, item: item)
+                            ) {
+                                MediaRowView(item: item)
+                                    .padding(.horizontal)
+                                    .padding(.vertical, 6)
+                            }
+                            .listRowSeparator(.hidden)
+                            .listRowInsets(EdgeInsets())
+                            .listRowBackground(Color.clear)
+                            .swipeActions(edge: .trailing) {
+                                Button(role: .destructive) {
+                                    delete(item)
+                                } label: {
+                                    Label("Delete", systemImage: "trash")
                                 }
                             }
                         }
-                        .onDelete(perform: viewModel.deleteItem)
                     }
+                    .listStyle(.plain)
                 }
             }
             .navigationTitle("VibeStream")
