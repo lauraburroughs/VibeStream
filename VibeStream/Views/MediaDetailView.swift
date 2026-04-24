@@ -13,33 +13,35 @@ struct MediaDetailView: View {
     let item: MediaItem
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        ZStack {
+            Color.appBackground.ignoresSafeArea()
             
-            Text(item.title)
-                .font(.largeTitle)
-                .bold()
-            
-            Text("Creator: \(item.creator)")
-            
-            Text("Category: \(item.category.rawValue.capitalized)")
-            
-            Text("Genre: \(item.genre)")
-            
-            Text("Year: \(String(item.year))")
-            
-            Spacer()
-        }
-        .padding()
-        .navigationTitle("Details")
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            NavigationLink {
-                AddEditMediaView(
-                    viewModel: viewModel,
-                    existingItem: item
-                )
-            } label: {
-                Text("Edit")
+            VStack(alignment: .leading, spacing: 12) {
+                
+                Text(item.title)
+                    .font(.largeTitle)
+                    .bold()
+                
+                Text("Creator: \(item.creator)")
+                Text("Category: \(item.category.rawValue.capitalized)")
+                Text("Genre: \(item.genre)")
+                Text("Year: \(String(item.year))")
+                
+                Spacer()
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+            .padding(30)
+            .navigationTitle("Details")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                NavigationLink {
+                    AddEditMediaView(
+                        viewModel: viewModel,
+                        existingItem: item
+                    )
+                } label: {
+                    Text("Edit")
+                }
             }
         }
     }

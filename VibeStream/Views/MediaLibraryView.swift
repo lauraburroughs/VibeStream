@@ -1,17 +1,10 @@
-//
-//  MediaLibraryView.swift
-//  VibeStream
-//
-//  Created by Laura Burroughs on 4/22/26.
-//
-
 import SwiftUI
 
 struct MediaLibraryView: View {
     
     @StateObject var viewModel = MediaLibraryViewModel()
     @State private var showAddView = false
-    
+    @State private var searchText = ""
     
     private func delete(_ item: MediaItem) {
         if let index = viewModel.items.firstIndex(where: { $0.id == item.id }) {
@@ -19,12 +12,35 @@ struct MediaLibraryView: View {
         }
     }
     
+    private var filteredItems: [MediaItem] {
+        if searchText.isEmpty {
+            return viewModel.items
+        } else {
+            return viewModel.items.filter {
+                $0.title.localizedCaseInsensitiveContains(searchText) ||
+                $0.creator.localizedCaseInsensitiveContains(searchText)
+            }
+        }
+    }
     
+    private var headerView: some View {
+        HStack(spacing: 10) {
+            Image("VibeStreamLogo")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 30, height: 30)
+            
+            Text("VibeStream")
+                .font(.title3)
+                .fontWeight(.semibold)
+        }
+    }
     
     var body: some View {
         NavigationStack {
-            
-            Group {
+            ZStack {
+                Color.appBackground.ignoresSafeArea()
+                
                 if viewModel.items.isEmpty {
                     VStack(spacing: 12) {
                         Text("No media added yet")
@@ -35,7 +51,7 @@ struct MediaLibraryView: View {
                     }
                 } else {
                     List {
-                        ForEach(viewModel.items) { item in
+                        ForEach(filteredItems) { item in
                             NavigationLink(
                                 destination: MediaDetailView(viewModel: viewModel, item: item)
                             ) {
@@ -55,25 +71,28 @@ struct MediaLibraryView: View {
                             }
                         }
                     }
+                    .searchable(text: $searchText)
+                    .scrollContentBackground(.hidden)
                     .listStyle(.plain)
                 }
             }
-            .navigationTitle("VibeStream")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                Button {
-                    showAddView = true
-                } label: {
-                    Image(systemName: "plus")
+                ToolbarItem(placement: .principal) {
+                    headerView
+                }
+                
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        showAddView = true
+                    } label: {
+                        Image(systemName: "plus")
+                    }
                 }
             }
-        }
-        .sheet(isPresented: $showAddView) {
-            AddEditMediaView(viewModel: viewModel)
+            .sheet(isPresented: $showAddView) {
+                AddEditMediaView(viewModel: viewModel)
+            }
         }
     }
-}
- 
-    
-#Preview {
-        MediaLibraryView()
 }
