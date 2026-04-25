@@ -20,7 +20,8 @@ class MediaLibraryViewModel: ObservableObject {
                  category: MediaCategory,
                  genre: String,
                  year: Int,
-                 rating: Int) {
+                 rating: Int,
+                 notes: String) {
         
         let newItem = MediaItem(
             id: UUID(),
@@ -30,7 +31,8 @@ class MediaLibraryViewModel: ObservableObject {
             genre: genre,
             year: year,
             dateAdded: Date(),
-            rating: rating
+            rating: rating,
+            notes: notes
         )
         
         items.append(newItem)

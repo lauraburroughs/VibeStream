@@ -16,27 +16,49 @@ struct MediaDetailView: View {
         ZStack {
             Color.appBackground.ignoresSafeArea()
             
-            VStack(alignment: .leading, spacing: 12) {
-                
-                Text(item.title)
-                    .font(.largeTitle)
-                    .bold()
-                
-                Text("Creator: \(item.creator)")
-                Text("Category: \(item.category.rawValue.capitalized)")
-                Text("Genre: \(item.genre)")
-                Text("Year: \(String(item.year))")
+            VStack(alignment: .leading, spacing: 16) {
+
+                Group {
+                    Text(item.title)
+                        .font(.title2)
+                        .fontWeight(.semibold)
+                }
+
+                Divider()
+
+                Group {
+                    Text("Creator: \(item.creator)")
+                    Text("Category: \(item.category.rawValue.capitalized)")
+                    Text("Genre: \(item.genre)")
+                    Text("Year: \(item.year)")
+                }
+                .font(.body)
+
+                Divider()
 
                 HStack {
                     ForEach(1...5, id: \.self) { star in
                         Image(systemName: star <= item.rating ? "star.fill" : "star")
+                            .foregroundStyle(Color.ratingStar)
                     }
                 }
                 
-                Spacer()
+                if !item.notes.isEmpty {
+                    Divider()
+
+                    Text("Notes")
+                        .font(.headline)
+
+                    Text(item.notes)
+                        .font(.body)
+                }
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-            .padding(30)
+            
+            .padding()
+            .background(Color.detailCard)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .shadow(color: .black.opacity(0.08), radius: 6, x: 0, y: 2)
+            .padding()
             .navigationTitle("Details")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -65,7 +87,8 @@ struct MediaDetailView: View {
             genre: "Drama",
             year: 2024,
             dateAdded: Date(),
-            rating: 5
+            rating: 5,
+            notes: "Loved it"
         )
     )
 }

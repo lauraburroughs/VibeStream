@@ -15,6 +15,7 @@ struct AddEditMediaView: View {
     @State private var genre = ""
     @State private var year = ""
     @State private var rating = 0
+    @State private var notes = ""
 
     @Environment(\.dismiss) var dismiss
 
@@ -63,6 +64,11 @@ struct AddEditMediaView: View {
                 }
             }
             
+            Section(header: Text("Notes")) {
+                TextField("Add notes...", text: $notes, axis: .vertical)
+                    .lineLimit(3...6)
+            }
+            
             Section {
                 Button("Save") {
                     
@@ -76,7 +82,8 @@ struct AddEditMediaView: View {
                         genre: genre,
                         year: yearInt,
                         dateAdded: existingItem?.dateAdded ?? Date(),
-                        rating: rating
+                        rating: rating,
+                        notes: notes
                     )
                     
                     if existingItem != nil {
@@ -88,7 +95,8 @@ struct AddEditMediaView: View {
                             category: category,
                             genre: genre,
                             year: yearInt,
-                            rating: rating
+                            rating: rating,
+                            notes: notes
                         )
                     }
                     dismiss()
@@ -103,6 +111,7 @@ struct AddEditMediaView: View {
                 genre = item.genre
                 year = String(item.year)
                 rating = item.rating
+                notes = item.notes
             }
         }
     }

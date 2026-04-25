@@ -18,6 +18,7 @@ struct MediaItem: Identifiable, Codable {
     var year: Int
     var dateAdded: Date
     var rating: Int
+    var notes: String
     
 }
 

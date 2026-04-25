@@ -35,7 +35,9 @@ extension Color {
 
 extension Color {
     static let appBackground = Color(hex: "#EDEFF0")
-    static let cardBackground = Color(hex: "#5FCCD8")
-    static let accent = Color(hex: "#28292A")
+    static let cardBackground = Color(hex: "#9adae1" )
+    static let accent = Color(hex: "#784E36")
     static let secondaryText = Color(hex: "#494B4C")
+    static let detailCard = Color(hex:"#9adae1")
+    static let ratingStar = Color(hex:"#784E36")
 }

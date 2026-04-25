@@ -32,7 +32,7 @@ struct MediaRowView: View {
                 HStack(spacing: 8) {
                     Text(item.category.rawValue.capitalized)
                     Text("•")
-                    Text("\(item.year)")
+                    Text("\(String(item.year))")
                 }
                     
                 HStack(spacing: 2) {
@@ -73,7 +73,8 @@ struct MediaRowView: View {
             genre: "Sci-Fi",
             year: 2010,
             dateAdded: Date(),
-            rating: 10
+            rating: 10,
+            notes: "Loved it"
         )
     )
 }

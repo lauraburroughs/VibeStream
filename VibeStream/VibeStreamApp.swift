@@ -11,7 +11,7 @@ import SwiftUI
 struct VibeStreamApp: App {
     var body: some Scene {
         WindowGroup {
-            MediaLibraryView()
+            SplashView()
         }
     }
 }
