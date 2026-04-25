@@ -17,7 +17,7 @@ struct MediaLibraryView: View {
             $0.title.localizedCaseInsensitiveContains(searchText) ||
             $0.creator.localizedCaseInsensitiveContains(searchText)
         }
-
+        
         switch sortOption {
         case .title:
             return filtered.sorted { $0.title < $1.title }
@@ -54,60 +54,57 @@ struct MediaLibraryView: View {
                 
                 if filteredItems.isEmpty {
                     VStack(spacing: 12) {
-                        Text("No media added yet")
+                        Text(viewModel.items.isEmpty ? "No media added yet" : "No results found")
                             .font(.headline)
                         
-                        Text("Tap + to add your first item")
-                            .foregroundStyle(.secondary)
+                        Text(viewModel.items.isEmpty
+                             ? "Tap + to add your first item"
+                             : "Try adjusting your search")
+                        .foregroundStyle(.secondary)
                     }
                 } else {
-                    VStack {
-                        HStack {
-                            Spacer()
-                            
-                            Menu {
-                                ForEach(SortOption.allCases, id: \.self) { option in
-                                    Button(option.rawValue) {
-                                        sortOption = option
-                                    }
-                                }
-                            } label: {
-                                Label("Sort", systemImage: "arrow.up.arrow.down")
+                    List {
+                        ForEach(filteredItems) { item in
+                            NavigationLink(
+                                destination: MediaDetailView(viewModel: viewModel, item: item)
+                            ) {
+                                MediaRowView(item: item)
+                                    .padding(.horizontal)
+                                    .padding(.vertical, 6)
                             }
-                            .padding(.horizontal)
-                        }
-                        
-                        List {
-                            ForEach(filteredItems) { item in
-                                NavigationLink(
-                                    destination: MediaDetailView(viewModel: viewModel, item: item)
-                                ) {
-                                    MediaRowView(item: item)
-                                        .padding(.horizontal)
-                                        .padding(.vertical, 6)
-                                }
-                                .listRowSeparator(.hidden)
-                                .listRowInsets(EdgeInsets())
-                                .listRowBackground(Color.clear)
-                                .swipeActions(edge: .trailing) {
-                                    Button(role: .destructive) {
-                                        delete(item)
-                                    } label: {
-                                        Label("Delete", systemImage: "trash")
-                                    }
+                            .listRowSeparator(.hidden)
+                            .listRowInsets(EdgeInsets())
+                            .listRowBackground(Color.clear)
+                            .swipeActions(edge: .trailing) {
+                                Button(role: .destructive) {
+                                    delete(item)
+                                } label: {
+                                    Label("Delete", systemImage: "trash")
                                 }
                             }
                         }
-                        .searchable(text: $searchText)
-                        .scrollContentBackground(.hidden)
-                        .listStyle(.plain)
                     }
+                    .scrollContentBackground(.hidden)
+                    .listStyle(.plain)
                 }
             }
-            .navigationBarTitleDisplayMode(.inline)
+            .searchable(text: $searchText)
+            
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     headerView
+                }
+                
+                ToolbarItem(placement: .topBarTrailing) {
+                    Menu {
+                        ForEach(SortOption.allCases, id: \.self) { option in
+                            Button(option.rawValue) {
+                                sortOption = option
+                            }
+                        }
+                    } label: {
+                        Label("Sort", systemImage: "arrow.up.arrow.down")
+                    }
                 }
                 
                 ToolbarItem(placement: .topBarTrailing) {
@@ -118,9 +115,10 @@ struct MediaLibraryView: View {
                     }
                 }
             }
-        }
-        .sheet(isPresented: $showAddView) {
-            AddEditMediaView(viewModel: viewModel)
+            
+            .sheet(isPresented: $showAddView) {
+                AddEditMediaView(viewModel: viewModel)
+            }
         }
     }
 }

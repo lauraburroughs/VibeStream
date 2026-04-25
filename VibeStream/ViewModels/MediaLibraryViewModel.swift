@@ -12,7 +12,7 @@ import Combine
 
 class MediaLibraryViewModel: ObservableObject {
     
-    @Published var items: [MediaItem] = []
+    @Published var items: [MediaItem] = MediaStorageService.load()
     
     
     func addItem(title: String,
@@ -34,11 +34,13 @@ class MediaLibraryViewModel: ObservableObject {
         )
         
         items.append(newItem)
+        MediaStorageService.save(items)
     }
     
     
     func deleteItem(at offsets: IndexSet) {
         items.remove(atOffsets: offsets)
+        MediaStorageService.save(items)
     }
     
     
@@ -46,9 +48,8 @@ class MediaLibraryViewModel: ObservableObject {
         if let index = items.firstIndex(where: { $0.id == updatedItem.id }) {
             items[index] = updatedItem
         }
+        MediaStorageService.save(items)
     }
-    
-    
 }
 
 
