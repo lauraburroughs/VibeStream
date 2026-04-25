@@ -30,8 +30,7 @@ struct MediaDetailView: View {
                     Text("Creator: \(item.creator)")
                     Text("Category: \(item.category.rawValue.capitalized)")
                     Text("Genre: \(item.genre)")
-                    Text("Year: \(item.year)")
-                }
+                    Text("Year: \(String(item.year))")                }
                 .font(.body)
 
                 Divider()
