@@ -46,10 +46,15 @@ class MediaLibraryViewModel: ObservableObject {
     }
     
     
+    func deleteItem(_ item: MediaItem) {
+        items.removeAll { $0.id == item.id }
+        MediaStorageService.save(items)
+    }
+    
+    
     func updateItem(_ updatedItem: MediaItem) {
-        if let index = items.firstIndex(where: { $0.id == updatedItem.id }) {
-            items[index] = updatedItem
-        }
+        guard let index = items.firstIndex(where: { $0.id == updatedItem.id }) else { return }
+        items[index] = updatedItem
         MediaStorageService.save(items)
     }
 }

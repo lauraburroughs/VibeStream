@@ -8,7 +8,7 @@ struct MediaLibraryView: View {
     @State private var sortOption: SortOption = .title
     
     private func delete(_ item: MediaItem) {
-        viewModel.items.removeAll { $0.id == item.id }
+        viewModel.deleteItem(item)
     }
     
     private var filteredItems: [MediaItem] {
