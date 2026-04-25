@@ -15,7 +15,12 @@ class MediaLibraryViewModel: ObservableObject {
     @Published var items: [MediaItem] = []
     
     
-    func addItem(title: String, creator: String, category: MediaCategory, genre: String, year: Int) {
+    func addItem(title: String,
+                 creator: String,
+                 category: MediaCategory,
+                 genre: String,
+                 year: Int,
+                 rating: Int) {
         
         let newItem = MediaItem(
             id: UUID(),
@@ -24,7 +29,8 @@ class MediaLibraryViewModel: ObservableObject {
             category: category,
             genre: genre,
             year: year,
-            dateAdded: Date()
+            dateAdded: Date(),
+            rating: rating
         )
         
         items.append(newItem)

@@ -14,6 +14,7 @@ struct AddEditMediaView: View {
     @State private var category: MediaCategory = .movie
     @State private var genre = ""
     @State private var year = ""
+    @State private var rating = 0
 
     @Environment(\.dismiss) var dismiss
 
@@ -41,7 +42,6 @@ struct AddEditMediaView: View {
                 }
             }
             
-            
             Section(header: Text("Details")) {
                 TextField("Genre", text: $genre)
                 TextField("Year", text: $year)
@@ -51,6 +51,17 @@ struct AddEditMediaView: View {
                     }
             }
             
+            Section(header: Text("Rating")) {
+                HStack {
+                    ForEach(1...5, id: \.self) { star in
+                        Image(systemName: star <= rating ? "star.fill" : "star")
+                            .foregroundStyle(.yellow)
+                            .onTapGesture {
+                                rating = star
+                            }
+                    }
+                }
+            }
             
             Section {
                 Button("Save") {
@@ -64,7 +75,8 @@ struct AddEditMediaView: View {
                         category: category,
                         genre: genre,
                         year: yearInt,
-                        dateAdded: existingItem?.dateAdded ?? Date()
+                        dateAdded: existingItem?.dateAdded ?? Date(),
+                        rating: rating
                     )
                     
                     if existingItem != nil {
@@ -75,7 +87,8 @@ struct AddEditMediaView: View {
                             creator: creator,
                             category: category,
                             genre: genre,
-                            year: yearInt
+                            year: yearInt,
+                            rating: rating
                         )
                     }
                     dismiss()
@@ -89,6 +102,7 @@ struct AddEditMediaView: View {
                 category = item.category
                 genre = item.genre
                 year = String(item.year)
+                rating = item.rating
             }
         }
     }

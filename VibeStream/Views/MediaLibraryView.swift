@@ -5,21 +5,26 @@ struct MediaLibraryView: View {
     @StateObject var viewModel = MediaLibraryViewModel()
     @State private var showAddView = false
     @State private var searchText = ""
+    @State private var sortOption: SortOption = .title
     
     private func delete(_ item: MediaItem) {
-        if let index = viewModel.items.firstIndex(where: { $0.id == item.id }) {
-            viewModel.items.remove(at: index)
-        }
+        viewModel.items.removeAll { $0.id == item.id }
     }
     
     private var filteredItems: [MediaItem] {
-        if searchText.isEmpty {
-            return viewModel.items
-        } else {
-            return viewModel.items.filter {
-                $0.title.localizedCaseInsensitiveContains(searchText) ||
-                $0.creator.localizedCaseInsensitiveContains(searchText)
-            }
+        let filtered = viewModel.items.filter {
+            searchText.isEmpty ||
+            $0.title.localizedCaseInsensitiveContains(searchText) ||
+            $0.creator.localizedCaseInsensitiveContains(searchText)
+        }
+
+        switch sortOption {
+        case .title:
+            return filtered.sorted { $0.title < $1.title }
+        case .year:
+            return filtered.sorted { $0.year < $1.year }
+        case .category:
+            return filtered.sorted { $0.category.rawValue < $1.category.rawValue }
         }
     }
     
@@ -36,12 +41,18 @@ struct MediaLibraryView: View {
         }
     }
     
+    enum SortOption: String, CaseIterable {
+        case title = "Title"
+        case year = "Year"
+        case category = "Category"
+    }
+    
     var body: some View {
         NavigationStack {
             ZStack {
                 Color.appBackground.ignoresSafeArea()
                 
-                if viewModel.items.isEmpty {
+                if filteredItems.isEmpty {
                     VStack(spacing: 12) {
                         Text("No media added yet")
                             .font(.headline)
@@ -50,30 +61,47 @@ struct MediaLibraryView: View {
                             .foregroundStyle(.secondary)
                     }
                 } else {
-                    List {
-                        ForEach(filteredItems) { item in
-                            NavigationLink(
-                                destination: MediaDetailView(viewModel: viewModel, item: item)
-                            ) {
-                                MediaRowView(item: item)
-                                    .padding(.horizontal)
-                                    .padding(.vertical, 6)
+                    VStack {
+                        HStack {
+                            Spacer()
+                            
+                            Menu {
+                                ForEach(SortOption.allCases, id: \.self) { option in
+                                    Button(option.rawValue) {
+                                        sortOption = option
+                                    }
+                                }
+                            } label: {
+                                Label("Sort", systemImage: "arrow.up.arrow.down")
                             }
-                            .listRowSeparator(.hidden)
-                            .listRowInsets(EdgeInsets())
-                            .listRowBackground(Color.clear)
-                            .swipeActions(edge: .trailing) {
-                                Button(role: .destructive) {
-                                    delete(item)
-                                } label: {
-                                    Label("Delete", systemImage: "trash")
+                            .padding(.horizontal)
+                        }
+                        
+                        List {
+                            ForEach(filteredItems) { item in
+                                NavigationLink(
+                                    destination: MediaDetailView(viewModel: viewModel, item: item)
+                                ) {
+                                    MediaRowView(item: item)
+                                        .padding(.horizontal)
+                                        .padding(.vertical, 6)
+                                }
+                                .listRowSeparator(.hidden)
+                                .listRowInsets(EdgeInsets())
+                                .listRowBackground(Color.clear)
+                                .swipeActions(edge: .trailing) {
+                                    Button(role: .destructive) {
+                                        delete(item)
+                                    } label: {
+                                        Label("Delete", systemImage: "trash")
+                                    }
                                 }
                             }
                         }
+                        .searchable(text: $searchText)
+                        .scrollContentBackground(.hidden)
+                        .listStyle(.plain)
                     }
-                    .searchable(text: $searchText)
-                    .scrollContentBackground(.hidden)
-                    .listStyle(.plain)
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
@@ -90,9 +118,9 @@ struct MediaLibraryView: View {
                     }
                 }
             }
-            .sheet(isPresented: $showAddView) {
-                AddEditMediaView(viewModel: viewModel)
-            }
+        }
+        .sheet(isPresented: $showAddView) {
+            AddEditMediaView(viewModel: viewModel)
         }
     }
 }

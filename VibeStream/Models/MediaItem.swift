@@ -17,6 +17,7 @@ struct MediaItem: Identifiable, Codable {
     var genre: String
     var year: Int
     var dateAdded: Date
+    var rating: Int
     
 }
 

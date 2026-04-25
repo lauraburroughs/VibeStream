@@ -34,6 +34,14 @@ struct MediaRowView: View {
                     Text("•")
                     Text("\(item.year)")
                 }
+                    
+                HStack(spacing: 2) {
+                    ForEach(1...5, id: \.self) { star in
+                        Image(systemName: star <= item.rating ? "star.fill" : "star")
+                            .font(.caption)
+                    }
+                }
+                
                 .font(.caption)
                 .foregroundColor(.secondary)
             }
@@ -64,7 +72,8 @@ struct MediaRowView: View {
             category: .movie,
             genre: "Sci-Fi",
             year: 2010,
-            dateAdded: Date()
+            dateAdded: Date(),
+            rating: 10
         )
     )
 }

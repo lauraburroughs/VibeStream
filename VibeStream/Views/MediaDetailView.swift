@@ -26,6 +26,12 @@ struct MediaDetailView: View {
                 Text("Category: \(item.category.rawValue.capitalized)")
                 Text("Genre: \(item.genre)")
                 Text("Year: \(String(item.year))")
+
+                HStack {
+                    ForEach(1...5, id: \.self) { star in
+                        Image(systemName: star <= item.rating ? "star.fill" : "star")
+                    }
+                }
                 
                 Spacer()
             }
@@ -58,7 +64,8 @@ struct MediaDetailView: View {
             category: .movie,
             genre: "Drama",
             year: 2024,
-            dateAdded: Date()
+            dateAdded: Date(),
+            rating: 5
         )
     )
 }
